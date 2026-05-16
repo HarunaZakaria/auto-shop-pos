@@ -16,11 +16,13 @@ import { useStore } from "@/lib/store";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 
-const items = [
+import type { Role } from "@/lib/store";
+
+const items: Array<{ title: string; url: string; icon: typeof LayoutDashboard; roles: Role[] }> = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, roles: ["admin", "cashier", "manager"] },
   { title: "POS", url: "/pos", icon: ShoppingCart, roles: ["admin", "cashier"] },
   { title: "Inventory", url: "/inventory", icon: Package, roles: ["admin", "manager"] },
-] as const;
+];
 
 export function AppSidebar() {
   const { user, logout } = useStore();
