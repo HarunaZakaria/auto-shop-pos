@@ -91,7 +91,7 @@ function POS() {
                 <p className="mt-2 line-clamp-2 text-sm font-medium">{p.name}</p>
                 <p className="text-xs text-muted-foreground">{p.sku}</p>
                 <div className="mt-1 flex items-center justify-between">
-                  <span className="text-sm font-bold text-primary">${p.price}</span>
+                  <span className="text-sm font-bold text-primary">GH₵{p.price}</span>
                   <Badge variant="outline" className="text-xs">{p.stock} in stock</Badge>
                 </div>
               </button>
@@ -116,7 +116,7 @@ function POS() {
               <div key={i.productId} className="flex items-center gap-2 rounded-md border p-2">
                 <div className="flex-1">
                   <p className="text-sm font-medium">{i.name}</p>
-                  <p className="text-xs text-muted-foreground">${i.price} × {i.qty}</p>
+                  <p className="text-xs text-muted-foreground">GH₵{i.price} × {i.qty}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => updateQty(i.productId, -1)}><Minus className="h-3 w-3" /></Button>
@@ -130,17 +130,17 @@ function POS() {
         </ScrollArea>
         <div className="border-t bg-muted/30 p-4 space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Subtotal</span><span>${subtotal.toLocaleString()}</span>
+            <span className="text-muted-foreground">Subtotal</span><span>GH₵{subtotal.toLocaleString()}</span>
           </div>
           <div className="flex items-center justify-between gap-2">
             <Label className="text-sm text-muted-foreground">Discount</Label>
             <Input type="number" value={discount} onChange={(e) => setDiscount(Number(e.target.value) || 0)} className="h-8 w-24 text-right" />
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Tax (16%)</span><span>${tax.toLocaleString()}</span>
+            <span className="text-muted-foreground">Tax (16%)</span><span>GH₵{tax.toLocaleString()}</span>
           </div>
           <div className="flex items-center justify-between border-t pt-3 text-lg font-bold">
-            <span>Total</span><span>${total.toLocaleString()}</span>
+            <span>Total</span><span>GH₵{total.toLocaleString()}</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
@@ -152,7 +152,7 @@ function POS() {
           </div>
 
           <Button className="w-full h-11" onClick={checkout} disabled={cart.length === 0}>
-            Complete sale · ${total.toLocaleString()}
+            Complete sale · GH₵{total.toLocaleString()}
           </Button>
         </div>
       </Card>
@@ -171,14 +171,14 @@ function POS() {
               <div className="my-3 border-y py-2">
                 {receipt.items.map((i) => (
                   <div key={i.productId} className="flex justify-between">
-                    <span>{i.qty}× {i.name}</span><span>${(i.qty * i.price).toLocaleString()}</span>
+                    <span>{i.qty}× {i.name}</span><span>GH₵{(i.qty * i.price).toLocaleString()}</span>
                   </div>
                 ))}
               </div>
               <div className="space-y-1">
-                <div className="flex justify-between"><span>Subtotal</span><span>${receipt.subtotal}</span></div>
-                <div className="flex justify-between"><span>Tax</span><span>${receipt.tax}</span></div>
-                <div className="flex justify-between font-bold"><span>Total</span><span>${receipt.total}</span></div>
+                <div className="flex justify-between"><span>Subtotal</span><span>GH₵{receipt.subtotal}</span></div>
+                <div className="flex justify-between"><span>Tax</span><span>GH₵{receipt.tax}</span></div>
+                <div className="flex justify-between font-bold"><span>Total</span><span>GH₵{receipt.total}</span></div>
                 <div className="flex justify-between text-xs text-muted-foreground"><span>Payment</span><span className="capitalize">{receipt.payment}</span></div>
                 <div className="flex justify-between text-xs text-muted-foreground"><span>Cashier</span><span>{receipt.cashier}</span></div>
               </div>
