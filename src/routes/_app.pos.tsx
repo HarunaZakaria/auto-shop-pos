@@ -59,7 +59,7 @@ function POS() {
 
   const checkout = () => {
     if (cart.length === 0) { toast.error("Cart is empty"); return; }
-    const sale = recordSale({ items: cart, subtotal, discount, tax, total, payment });
+    const sale = recordSale({ items: cart, subtotal, discount, tax: 0, total, payment });
     setReceipt(sale);
     setCart([]);
     setDiscount(0);
@@ -133,9 +133,6 @@ function POS() {
             <Label className="text-sm text-muted-foreground">Discount</Label>
             <Input type="number" value={discount} onChange={(e) => setDiscount(Number(e.target.value) || 0)} className="h-8 w-24 text-right" />
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Tax (16%)</span><span>GH₵{tax.toLocaleString()}</span>
-          </div>
           <div className="flex items-center justify-between border-t pt-3 text-lg font-bold">
             <span>Total</span><span>GH₵{total.toLocaleString()}</span>
           </div>
@@ -174,7 +171,6 @@ function POS() {
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between"><span>Subtotal</span><span>GH₵{receipt.subtotal}</span></div>
-                <div className="flex justify-between"><span>Tax</span><span>GH₵{receipt.tax}</span></div>
                 <div className="flex justify-between font-bold"><span>Total</span><span>GH₵{receipt.total}</span></div>
                 <div className="flex justify-between text-xs text-muted-foreground"><span>Payment</span><span className="capitalize">{receipt.payment}</span></div>
                 <div className="flex justify-between text-xs text-muted-foreground"><span>Cashier</span><span>{receipt.cashier}</span></div>
