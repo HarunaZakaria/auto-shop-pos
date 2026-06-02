@@ -20,8 +20,6 @@ export const Route = createFileRoute("/_app/pos")({
   component: POS,
 });
 
-const TAX_RATE = 0.16;
-
 function POS() {
   const { products, recordSale } = useStore();
   const [search, setSearch] = useState("");
@@ -57,8 +55,7 @@ function POS() {
   const removeItem = (id: string) => setCart((c) => c.filter((i) => i.productId !== id));
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const tax = Math.round((subtotal - discount) * TAX_RATE);
-  const total = Math.max(0, subtotal - discount + tax);
+  const total = Math.max(0, subtotal - discount);
 
   const checkout = () => {
     if (cart.length === 0) { toast.error("Cart is empty"); return; }
