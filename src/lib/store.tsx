@@ -135,7 +135,7 @@ interface StoreState {
 
 const StoreCtx = createContext<StoreState | null>(null);
 
-const LS_KEY = "pos_store_v2";
+const LS_KEY = "pos_store_v3";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
