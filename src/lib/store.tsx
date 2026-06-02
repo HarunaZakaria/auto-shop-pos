@@ -49,34 +49,45 @@ const MOCK_USERS: Array<User & { password: string }> = [
   { id: "u3", username: "manager", password: "manager123", name: "Mark Manager", role: "manager" },
 ];
 
-const seedProducts = (): Product[] => {
-  const cats = ["Engine", "Brakes", "Filters", "Electrical", "Suspension", "Body"];
-  const brands = ["Bosch", "Denso", "NGK", "Brembo", "Mann", "Valeo"];
-  const vehicles = ["Toyota Corolla", "Honda Civic", "Ford Ranger", "Nissan Navara", "Universal"];
-  const names = [
-    "Brake Pad Set", "Oil Filter", "Spark Plug", "Air Filter", "Shock Absorber",
-    "Headlight Bulb", "Wiper Blade", "Timing Belt", "Battery 12V", "Fuel Pump",
-    "Clutch Kit", "Radiator", "Alternator", "Starter Motor", "CV Joint",
-    "Brake Disc", "Cabin Filter", "Engine Mount", "Drive Belt", "Thermostat",
-  ];
-  return names.map((n, i) => {
-    const cost = Math.round(20 + Math.random() * 180);
-    return {
-      id: `p${i + 1}`,
-      name: n,
-      sku: `SKU-${1000 + i}`,
-      category: cats[i % cats.length],
-      brand: brands[i % brands.length],
-      vehicle: vehicles[i % vehicles.length],
-      costPrice: cost,
-      price: Math.round(cost * (1.3 + Math.random() * 0.4)),
-      stock: Math.floor(Math.random() * 60),
-      reorderLevel: 10,
-      supplier: ["AutoZone Ltd", "PartsPro", "MegaParts"][i % 3],
-      createdAt: new Date(Date.now() - i * 86400000).toISOString(),
-    };
-  });
+import { SEED_ITEMS } from "./seedItems";
+
+const inferCategory = (name: string): string => {
+  const n = name.toLowerCase();
+  if (n.includes("bearing")) return "Bearings";
+  if (n.includes("belt")) return "Belts";
+  if (n.includes("filter")) return "Filters";
+  if (n.includes("gear")) return "Gears";
+  if (n.includes("clutch")) return "Clutch";
+  if (n.includes("break") || n.includes("brake")) return "Brakes";
+  if (n.includes("piston") || n.includes("ring") || n.includes("lining") || n.includes("crank") || n.includes("valve") || n.includes("gasket")) return "Engine";
+  if (n.includes("absorber") || n.includes("spring") || n.includes("shaft")) return "Suspension";
+  if (n.includes("oil") || n.includes("pump")) return "Pumps";
+  return "General";
 };
+
+const inferVehicle = (name: string): string => {
+  const n = name.toLowerCase();
+  if (n.includes("18hp")) return "18HP Tractor";
+  if (n.includes("22hp")) return "22HP Tractor";
+  if (n.includes("28hp")) return "28HP Tractor";
+  return "Universal";
+};
+
+const seedProducts = (): Product[] =>
+  SEED_ITEMS.map((it, i) => ({
+    id: `p${i + 1}`,
+    name: it.name,
+    sku: `SKU-${String(1000 + i).padStart(5, "0")}`,
+    category: inferCategory(it.name),
+    brand: "—",
+    vehicle: inferVehicle(it.name),
+    costPrice: Math.round(it.price * 0.75),
+    price: it.price,
+    stock: it.stock,
+    reorderLevel: 5,
+    supplier: "—",
+    createdAt: new Date(Date.now() - i * 3600000).toISOString(),
+  }));
 
 const seedSales = (products: Product[]): Sale[] => {
   const sales: Sale[] = [];
