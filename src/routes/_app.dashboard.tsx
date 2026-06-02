@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_app/dashboard")({
   component: Dashboard,
 });
 
-const fmt = (n: number) => `$${n.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+const fmt = (n: number) => `GH₵${n.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
 function Dashboard() {
   const { sales, products } = useStore();

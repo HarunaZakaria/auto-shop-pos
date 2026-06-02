@@ -79,13 +79,13 @@ const seedProducts = (): Product[] =>
     name: it.name,
     sku: `SKU-${String(1000 + i).padStart(5, "0")}`,
     category: inferCategory(it.name),
-    brand: "—",
+    brand: "MK",
     vehicle: inferVehicle(it.name),
     costPrice: Math.round(it.price * 0.75),
     price: it.price,
     stock: it.stock,
     reorderLevel: 5,
-    supplier: "—",
+    supplier: "MK-TAMALE",
     createdAt: new Date(Date.now() - i * 3600000).toISOString(),
   }));
 

@@ -138,8 +138,8 @@ function Inventory() {
                   <TableCell className="font-mono text-xs">{p.sku}</TableCell>
                   <TableCell>{p.category}</TableCell>
                   <TableCell>{p.brand}</TableCell>
-                  <TableCell className="text-right">${p.costPrice}</TableCell>
-                  <TableCell className="text-right font-medium">${p.price}</TableCell>
+                  <TableCell className="text-right">GH₵{p.costPrice}</TableCell>
+                  <TableCell className="text-right font-medium">GH₵{p.price}</TableCell>
                   <TableCell className="text-right">
                     <Badge variant={p.stock === 0 ? "destructive" : p.stock <= p.reorderLevel ? "secondary" : "outline"}>
                       {p.stock}
