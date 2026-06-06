@@ -27,6 +27,20 @@ exports.register = asyncHandler(async (req, res) => {
   res.status(201).json(user.toSafeJSON());
 });
 
+// POST /api/auth/signup   (public — creates a cashier account and returns a token)
+exports.signup = asyncHandler(async (req, res) => {
+  const { username, name, email, password } = req.body;
+  const exists = await User.findOne({ username: username.toLowerCase() });
+  if (exists) {
+    res.status(409);
+    throw new Error("Username already taken");
+  }
+  const user = new User({ username, name, email, role: "cashier" });
+  await user.setPassword(password);
+  await user.save();
+  res.status(201).json({ token: signToken(user), user: user.toSafeJSON() });
+});
+
 // GET /api/auth/me
 exports.me = asyncHandler(async (req, res) => {
   res.json(req.user.toSafeJSON());
