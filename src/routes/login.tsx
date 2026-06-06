@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,13 +29,22 @@ function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (u: string, p: string) => {
-    if (login(u, p)) {
-      toast.success(`Welcome, ${u}!`);
-      navigate({ to: "/dashboard" });
-    } else {
-      toast.error("Invalid credentials");
+  const handleLogin = async (u: string, p: string) => {
+    setLoading(true);
+    try {
+      const ok = await login(u, p);
+      if (ok) {
+        toast.success(`Welcome, ${u}!`);
+        navigate({ to: "/dashboard" });
+      } else {
+        toast.error("Invalid credentials");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Sign in failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,8 +76,17 @@ function LoginPage() {
             <Label htmlFor="p">Password</Label>
             <Input id="p" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          <Button type="submit" className="w-full">Sign in</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Signing in…" : "Sign in"}
+          </Button>
         </form>
+
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Don't have an account?{" "}
+          <Link to="/signup" className="font-medium text-primary hover:underline">
+            Create one
+          </Link>
+        </p>
 
         <div className="mt-6 border-t pt-4">
           <p className="mb-2 text-xs font-medium text-muted-foreground">Demo accounts — click to sign in</p>
@@ -77,7 +95,8 @@ function LoginPage() {
               <button
                 key={d.username}
                 onClick={() => handleLogin(d.username, d.password)}
-                className="flex items-center justify-between rounded-md border bg-secondary/50 px-3 py-2 text-left text-sm transition hover:bg-secondary"
+                disabled={loading}
+                className="flex items-center justify-between rounded-md border bg-secondary/50 px-3 py-2 text-left text-sm transition hover:bg-secondary disabled:opacity-50"
               >
                 <span className="font-medium">{d.role}</span>
                 <span className="text-xs text-muted-foreground">{d.username} / {d.password}</span>

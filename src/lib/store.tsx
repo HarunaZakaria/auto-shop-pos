@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { authApi, setToken } from "@/lib/api";
 
 export type Role = "admin" | "cashier" | "manager";
 
@@ -125,7 +126,8 @@ interface StoreState {
   user: User | null;
   products: Product[];
   sales: Sale[];
-  login: (u: string, p: string) => boolean;
+  login: (u: string, p: string) => Promise<boolean>;
+  signup: (input: { username: string; name: string; email?: string; password: string }) => Promise<boolean>;
   logout: () => void;
   addProduct: (p: Omit<Product, "id" | "createdAt">) => void;
   updateProduct: (id: string, p: Partial<Product>) => void;
@@ -164,15 +166,33 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(LS_KEY, JSON.stringify({ user, products, sales }));
   }, [user, products, sales, hydrated]);
 
-  const login = (username: string, password: string) => {
-    const u = MOCK_USERS.find((x) => x.username === username && x.password === password);
-    if (!u) return false;
-    const { password: _pw, ...rest } = u;
-    setUser(rest);
+  const login: StoreState["login"] = async (username, password) => {
+    try {
+      const { token, user: u } = await authApi.login(username, password);
+      setToken(token);
+      setUser({ id: u.id, username: u.username, name: u.name, role: u.role });
+      return true;
+    } catch (err) {
+      // Fallback to local mock users if the backend isn't reachable.
+      const mock = MOCK_USERS.find((x) => x.username === username && x.password === password);
+      if (!mock) return false;
+      const { password: _pw, ...rest } = mock;
+      setUser(rest);
+      return true;
+    }
+  };
+
+  const signup: StoreState["signup"] = async ({ username, name, email, password }) => {
+    const { token, user: u } = await authApi.signup({ username, name, email, password });
+    setToken(token);
+    setUser({ id: u.id, username: u.username, name: u.name, role: u.role });
     return true;
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+  };
 
   const addProduct: StoreState["addProduct"] = (p) => {
     setProducts((arr) => [
@@ -206,7 +226,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <StoreCtx.Provider
-      value={{ user, products, sales, login, logout, addProduct, updateProduct, deleteProduct, recordSale }}
+      value={{ user, products, sales, login, signup, logout, addProduct, updateProduct, deleteProduct, recordSale }}
     >
       {children}
     </StoreCtx.Provider>
