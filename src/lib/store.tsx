@@ -226,7 +226,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <StoreCtx.Provider
-      value={{ user, products, sales, login, logout, addProduct, updateProduct, deleteProduct, recordSale }}
+      value={{ user, products, sales, login, signup, logout, addProduct, updateProduct, deleteProduct, recordSale }}
     >
       {children}
     </StoreCtx.Provider>
