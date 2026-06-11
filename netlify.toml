@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build:frontend"
+  publish = "frontend/dist/client"
+
+[build.environment]
+  VITE_API_URL = "https://auto-shop-pos-backend.onrender.com/api"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
