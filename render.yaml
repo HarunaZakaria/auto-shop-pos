@@ -3,7 +3,7 @@ services:
     name: auto-shop-pos-backend
     env: node
     rootDir: backend
-    buildCommand: npm ci
+    buildCommand: npm install
     startCommand: node src/server.js
     envVars:
       - key: NODE_ENV
